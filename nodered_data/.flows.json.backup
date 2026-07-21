@@ -1,0 +1,181 @@
+[
+    {
+        "id": "d482ac1599de945d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "237f8dbf8f27a650",
+        "type": "redis-config",
+        "name": "Redis",
+        "options": "{\"host\":\"redis\",\"port\":6379}",
+        "cluster": false,
+        "optionsType": "json"
+    },
+    {
+        "id": "1beec794a2175b48",
+        "type": "inject",
+        "z": "d482ac1599de945d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "91b36b12325d5595",
+                "0266347169a5f872",
+                "3232d61ed91b1370"
+            ]
+        ]
+    },
+    {
+        "id": "9e0a6a38620cb3b8",
+        "type": "redis-out",
+        "z": "d482ac1599de945d",
+        "server": "237f8dbf8f27a650",
+        "command": "rpush",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "x": 1010,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "91b36b12325d5595",
+        "type": "function",
+        "z": "d482ac1599de945d",
+        "name": "MCH",
+        "func": "let MACHINE_IDS = [];\nfor (let i = 1; i <= 1000; i++) {\n    MACHINE_IDS.push(`MCH-${String(i).padStart(4, \"0\")}`);\n}\n// Função sinusoidal com randomização\nfunction sinusoidal(base, amplitude, period) {\n    const t = Date.now() % period; // tempo relativo, sem estado\n    return base + amplitude * Math.sin(t / period);\n}\n\n// Gera um objeto por máquina\nfunction generateMachine(id) {\n\n    // Cada parâmetro recebe um período aleatório entre 3s e 30s\n    const randPeriod = () => Math.floor(Math.random() * (30000 - 3000)) + 3000;\n\n    return {\n        machineId: id,\n        timestamp: Date.now(),\n\n        temperature: sinusoidal(60, 20, randPeriod()),\n        vibration: sinusoidal(2, 1.5, randPeriod()),\n        loadPercentage: sinusoidal(50, 40, randPeriod()),\n        rpm: sinusoidal(2000, 800, randPeriod()),\n        voltage: sinusoidal(230, 10, randPeriod()),\n        current: sinusoidal(10, 8, randPeriod()),\n        pressure: sinusoidal(6, 4, randPeriod()),\n        humidity: sinusoidal(40, 30, randPeriod()),\n        oilLevel: sinusoidal(70, 20, randPeriod()),\n        coolantTemperature: sinusoidal(55, 15, randPeriod()),\n\n        cycleCount: Math.floor(Math.random() * 200000),\n        powerConsumption: sinusoidal(3, 1.5, randPeriod()),\n        torque: sinusoidal(100, 40, randPeriod()),\n        bearingWear: Math.random() * 20,\n        noiseLevel: sinusoidal(60, 10, randPeriod()),\n\n        errorCode: Math.random() < 0.02 ? 1 : 0,\n        networkLatency: sinusoidal(10, 5, randPeriod()),\n        uptimeHours: Math.random() * 5000,\n\n        status: \"OK\"\n    };\n}\n\n// Ajusta status\nfunction adjustStatus(obj) {\n    if (obj.errorCode === 1) obj.status = \"ERROR\";\n    else if (obj.vibration > 4 || obj.temperature > 85) obj.status = \"WARNING\";\n    return obj;\n}\n\n// Gera todas as máquinas\nmsg.payload = MACHINE_IDS.map(id => adjustStatus(generateMachine(id)));\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "eef504d7b926686b"
+            ]
+        ]
+    },
+    {
+        "id": "eef504d7b926686b",
+        "type": "split",
+        "z": "d482ac1599de945d",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 570,
+        "y": 80,
+        "wires": [
+            [
+                "9612ea57a2098f97",
+                "a15427acd959bb21"
+            ]
+        ]
+    },
+    {
+        "id": "9612ea57a2098f97",
+        "type": "redis-out",
+        "z": "d482ac1599de945d",
+        "server": "237f8dbf8f27a650",
+        "command": "publish",
+        "name": "",
+        "topic": "Publish",
+        "obj": true,
+        "x": 800,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "0266347169a5f872",
+        "type": "function",
+        "z": "d482ac1599de945d",
+        "name": "ABC",
+        "func": "let MACHINE_IDS = [];\nfor (let i = 1; i <= 1000; i++) {\n    MACHINE_IDS.push(`ABC-${String(i).padStart(4, \"0\")}`);\n}\n// Função sinusoidal com randomização\nfunction sinusoidal(base, amplitude, period) {\n    const t = Date.now() % period; // tempo relativo, sem estado\n    return base + amplitude * Math.sin(t / period);\n}\n\n// Gera um objeto por máquina\nfunction generateMachine(id) {\n\n    // Cada parâmetro recebe um período aleatório entre 3s e 30s\n    const randPeriod = () => Math.floor(Math.random() * (30000 - 3000)) + 3000;\n\n    return {\n        machineId: id,\n        timestamp: Date.now(),\n\n        temperature: sinusoidal(60, 20, randPeriod()),\n        vibration: sinusoidal(2, 1.5, randPeriod()),\n        loadPercentage: sinusoidal(50, 40, randPeriod()),\n        rpm: sinusoidal(2000, 800, randPeriod()),\n        voltage: sinusoidal(230, 10, randPeriod()),\n        current: sinusoidal(10, 8, randPeriod()),\n        pressure: sinusoidal(6, 4, randPeriod()),\n        humidity: sinusoidal(40, 30, randPeriod()),\n        oilLevel: sinusoidal(70, 20, randPeriod()),\n        coolantTemperature: sinusoidal(55, 15, randPeriod()),\n\n        cycleCount: Math.floor(Math.random() * 200000),\n        powerConsumption: sinusoidal(3, 1.5, randPeriod()),\n        torque: sinusoidal(100, 40, randPeriod()),\n        bearingWear: Math.random() * 20,\n        noiseLevel: sinusoidal(60, 10, randPeriod()),\n\n        errorCode: Math.random() < 0.02 ? 1 : 0,\n        networkLatency: sinusoidal(10, 5, randPeriod()),\n        uptimeHours: Math.random() * 5000,\n\n        status: \"OK\"\n    };\n}\n\n// Ajusta status\nfunction adjustStatus(obj) {\n    if (obj.errorCode === 1) obj.status = \"ERROR\";\n    else if (obj.vibration > 4 || obj.temperature > 85) obj.status = \"WARNING\";\n    return obj;\n}\n\n// Gera todas as máquinas\nmsg.payload = MACHINE_IDS.map(id => adjustStatus(generateMachine(id)));\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "eef504d7b926686b"
+            ]
+        ]
+    },
+    {
+        "id": "3232d61ed91b1370",
+        "type": "function",
+        "z": "d482ac1599de945d",
+        "name": "XYZ",
+        "func": "let MACHINE_IDS = [];\nfor (let i = 1; i <= 1000; i++) {\n    MACHINE_IDS.push(`XYZ-${String(i).padStart(4, \"0\")}`);\n}\n// Função sinusoidal com randomização\nfunction sinusoidal(base, amplitude, period) {\n    const t = Date.now() % period; // tempo relativo, sem estado\n    return base + amplitude * Math.sin(t / period);\n}\n\n// Gera um objeto por máquina\nfunction generateMachine(id) {\n\n    // Cada parâmetro recebe um período aleatório entre 3s e 30s\n    const randPeriod = () => Math.floor(Math.random() * (30000 - 3000)) + 3000;\n\n    return {\n        machineId: id,\n        timestamp: Date.now(),\n\n        temperature: sinusoidal(60, 20, randPeriod()),\n        vibration: sinusoidal(2, 1.5, randPeriod()),\n        loadPercentage: sinusoidal(50, 40, randPeriod()),\n        rpm: sinusoidal(2000, 800, randPeriod()),\n        voltage: sinusoidal(230, 10, randPeriod()),\n        current: sinusoidal(10, 8, randPeriod()),\n        pressure: sinusoidal(6, 4, randPeriod()),\n        humidity: sinusoidal(40, 30, randPeriod()),\n        oilLevel: sinusoidal(70, 20, randPeriod()),\n        coolantTemperature: sinusoidal(55, 15, randPeriod()),\n\n        cycleCount: Math.floor(Math.random() * 200000),\n        powerConsumption: sinusoidal(3, 1.5, randPeriod()),\n        torque: sinusoidal(100, 40, randPeriod()),\n        bearingWear: Math.random() * 20,\n        noiseLevel: sinusoidal(60, 10, randPeriod()),\n\n        errorCode: Math.random() < 0.02 ? 1 : 0,\n        networkLatency: sinusoidal(10, 5, randPeriod()),\n        uptimeHours: Math.random() * 5000,\n\n        status: \"OK\"\n    };\n}\n\n// Ajusta status\nfunction adjustStatus(obj) {\n    if (obj.errorCode === 1) obj.status = \"ERROR\";\n    else if (obj.vibration > 4 || obj.temperature > 85) obj.status = \"WARNING\";\n    return obj;\n}\n\n// Gera todas as máquinas\nmsg.payload = MACHINE_IDS.map(id => adjustStatus(generateMachine(id)));\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "eef504d7b926686b"
+            ]
+        ]
+    },
+    {
+        "id": "a15427acd959bb21",
+        "type": "delay",
+        "z": "d482ac1599de945d",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 770,
+        "y": 80,
+        "wires": [
+            [
+                "9e0a6a38620cb3b8"
+            ]
+        ]
+    }
+]

@@ -1,0 +1,26 @@
+0 verbose cli /usr/local/bin/node /usr/src/node-red/node_modules/npm/bin/npm-cli.js
+1 info using npm@11.18.0
+2 info using node@v24.18.0
+3 silly config load:file:/usr/src/node-red/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install node-red-node-mongodb@0.2.5
+8 verbose argv "install" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "--save-prefix" "~" "--omit" "dev" "--engine-strict" "--" "node-red-node-mongodb@0.2.5"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2026-07-21T17_55_26_917Z-
+10 verbose logfile /data/.npm/_logs/2026-07-21T17_55_26_917Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest node-red-node-mongodb@0.2.5
+15 silly packumentCache full:https://registry.npmjs.org/node-red-node-mongodb cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/node-red-node-mongodb 177ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/node-red-node-mongodb set size:undefined disposed:false
+18 silly placeDep ROOT node-red-node-mongodb@0.2.5 REPLACE for: node-red-project@0.0.1 want: 0.2.5
+19 silly reify moves {}
+20 verbose cwd /data
+21 verbose os Linux 5.15.167.4-microsoft-standard-WSL2
+22 verbose node v24.18.0
+23 verbose npm  v11.18.0
+24 verbose exit 0
+25 info ok

@@ -1,0 +1,611 @@
+[
+    {
+        "id": "2a04c845657f0fef",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c878875be11073d8",
+        "type": "redis-config",
+        "name": "Redis",
+        "options": "{\"host\":\"redis\",\"port\":6379}",
+        "cluster": false,
+        "optionsType": "json"
+    },
+    {
+        "id": "a1d6b76f8b268cca",
+        "type": "mongodb",
+        "hostname": "mongodb",
+        "topology": "direct",
+        "connectOptions": "",
+        "port": 27017,
+        "db": "IoT",
+        "name": ""
+    },
+    {
+        "id": "914731e42318d66a",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "51f1e3f4424f8744"
+            ]
+        ]
+    },
+    {
+        "id": "0780ed1834ff60d5",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "51f1e3f4424f8744",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 1",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 120,
+        "wires": [
+            [
+                "0780ed1834ff60d5"
+            ]
+        ]
+    },
+    {
+        "id": "ccd9b15a4164b406",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 240,
+        "wires": [
+            [
+                "499cf3679d4f74c4"
+            ]
+        ]
+    },
+    {
+        "id": "5bf0839395aeb549",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "499cf3679d4f74c4",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 2",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 240,
+        "wires": [
+            [
+                "5bf0839395aeb549"
+            ]
+        ]
+    },
+    {
+        "id": "c730fe474097b7fc",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 180,
+        "wires": [
+            [
+                "3cdf2d7b3d15997f"
+            ]
+        ]
+    },
+    {
+        "id": "18ad03a02bc17e10",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3cdf2d7b3d15997f",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 3",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "18ad03a02bc17e10"
+            ]
+        ]
+    },
+    {
+        "id": "1d04fc19ee590c0d",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "75092209b5932d71"
+            ]
+        ]
+    },
+    {
+        "id": "6f45fcb6e733308c",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "75092209b5932d71",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 4",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 300,
+        "wires": [
+            [
+                "6f45fcb6e733308c"
+            ]
+        ]
+    },
+    {
+        "id": "c3b752f4925b54d9",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 360,
+        "wires": [
+            [
+                "d17846d470952bd8"
+            ]
+        ]
+    },
+    {
+        "id": "3b0f2cb13165ef41",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d17846d470952bd8",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 5",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 360,
+        "wires": [
+            [
+                "3b0f2cb13165ef41"
+            ]
+        ]
+    },
+    {
+        "id": "ea78161dcc3338a5",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "809eb6856436f543"
+            ]
+        ]
+    },
+    {
+        "id": "e98c31fd28ff9788",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "809eb6856436f543",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 6",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 420,
+        "wires": [
+            [
+                "e98c31fd28ff9788"
+            ]
+        ]
+    },
+    {
+        "id": "6be81012bc3a9f1d",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 480,
+        "wires": [
+            [
+                "6bce366b5c383d03"
+            ]
+        ]
+    },
+    {
+        "id": "347ab2a88e2cfd90",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "6bce366b5c383d03",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 7",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 480,
+        "wires": [
+            [
+                "347ab2a88e2cfd90"
+            ]
+        ]
+    },
+    {
+        "id": "7286359dc83145e2",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "cc2ea8731cefb329"
+            ]
+        ]
+    },
+    {
+        "id": "32a057e29b711232",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "cc2ea8731cefb329",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 8",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 540,
+        "wires": [
+            [
+                "32a057e29b711232"
+            ]
+        ]
+    },
+    {
+        "id": "ab625bc1c789a258",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 600,
+        "wires": [
+            [
+                "b9413520d7e032cf"
+            ]
+        ]
+    },
+    {
+        "id": "dbe5d4adc38d677e",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b9413520d7e032cf",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 9",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 600,
+        "wires": [
+            [
+                "dbe5d4adc38d677e"
+            ]
+        ]
+    },
+    {
+        "id": "1370ae0390ba99f8",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 660,
+        "wires": [
+            [
+                "4c4d1328c68acdf1"
+            ]
+        ]
+    },
+    {
+        "id": "3e5f7002fcf500ed",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "4c4d1328c68acdf1",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 10",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 660,
+        "wires": [
+            [
+                "3e5f7002fcf500ed"
+            ]
+        ]
+    },
+    {
+        "id": "8c73de39f1f0c83d",
+        "type": "redis-in",
+        "z": "2a04c845657f0fef",
+        "server": "c878875be11073d8",
+        "command": "blpop",
+        "name": "",
+        "topic": "Queue",
+        "obj": true,
+        "timeout": 0,
+        "x": 370,
+        "y": 720,
+        "wires": [
+            [
+                "e6e6898ee6f5545a"
+            ]
+        ]
+    },
+    {
+        "id": "e5bdcd52043115c2",
+        "type": "mongodb out",
+        "z": "2a04c845657f0fef",
+        "mongodb": "a1d6b76f8b268cca",
+        "name": "",
+        "collection": "IoT",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 670,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "e6e6898ee6f5545a",
+        "type": "function",
+        "z": "2a04c845657f0fef",
+        "name": "function 11",
+        "func": "// Garantir que o payload é um objeto válido\nif (typeof msg.payload !== \"object\" || msg.payload === null) {\n    node.error(\"Payload inválido para MongoDB\", msg);\n    return null;\n}\n\n// Criar documento organizado\nconst doc = {\n    machineId: msg.payload.machineId,\n    timestamp: new Date(msg.payload.timestamp),\n    metrics: {\n        temperature: msg.payload.temperature,\n        vibration: msg.payload.vibration,\n        loadPercentage: msg.payload.loadPercentage,\n        rpm: msg.payload.rpm,\n        voltage: msg.payload.voltage,\n        current: msg.payload.current,\n        pressure: msg.payload.pressure,\n        humidity: msg.payload.humidity,\n        oilLevel: msg.payload.oilLevel,\n        coolantTemperature: msg.payload.coolantTemperature,\n        powerConsumption: msg.payload.powerConsumption,\n        torque: msg.payload.torque,\n        bearingWear: msg.payload.bearingWear,\n        noiseLevel: msg.payload.noiseLevel,\n        networkLatency: msg.payload.networkLatency\n    },\n    counters: {\n        cycleCount: msg.payload.cycleCount,\n        uptimeHours: msg.payload.uptimeHours\n    },\n    status: msg.payload.status,\n    errorCode: msg.payload.errorCode\n};\n\nmsg.payload = doc;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 720,
+        "wires": [
+            [
+                "e5bdcd52043115c2"
+            ]
+        ]
+    }
+]
