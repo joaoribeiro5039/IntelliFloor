@@ -1,54 +1,35 @@
 services:
-  nodered:
-    image: nodered/node-red:latest
-    container_name: nodered
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
     ports:
-      - "1880:1880"
+      - "${OLLAMA_PORT:-11434}:11434"
     volumes:
-      - ./nodered_data:/data
+      - ollama_data:/root/.ollama
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
     depends_on:
-      - redis
-    restart: unless-stopped
-
-  nodered2:
-    image: nodered/node-red:latest
-    container_name: nodered2
+      - ollama
     ports:
-      - "1881:1880"
+      - "${N8N_PORT:-5678}:5678"
+    environment:
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-UTC}
+      TZ: ${GENERIC_TIMEZONE:-UTC}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      N8N_EDITOR_BASE_URL: ${N8N_EDITOR_BASE_URL:-http://localhost:5678}
+      WEBHOOK_URL: ${WEBHOOK_URL:-http://localhost:5678/}
+      N8N_RESTRICT_FILE_ACCESS_TO: /files/obsidian
     volumes:
-      - ./nodered2_data:/data
-    depends_on:
-      - redis
-    restart: unless-stopped
-
-  mongodb:
-    image: mongo:8
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongodb_data:/data/db
-    restart: unless-stopped
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./grafana_data:/var/lib/grafana
-    restart: unless-stopped
-
-  redis:
-    image: redis:7
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis_data:/data
-    command: ["redis-server", "--appendonly", "yes"]
-    restart: unless-stopped
+      - n8n_data:/home/node/.n8n
+      - ./obsidian-vault:/files/obsidian
 
 volumes:
-  nodered_data:
-  redis_data:
+  n8n_data:
+  ollama_data:
